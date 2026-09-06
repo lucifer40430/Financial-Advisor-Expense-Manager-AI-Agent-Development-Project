@@ -1,6 +1,10 @@
 from backend.database.db import get_connection
 
 
+# ============================================================
+# ALL USER EXPENSES
+# ============================================================
+
 def get_user_expenses(user_id):
     connection = None
     cursor = None
@@ -23,7 +27,6 @@ def get_user_expenses(user_id):
         """
 
         cursor.execute(query, (user_id,))
-
         return cursor.fetchall()
 
     finally:
@@ -35,7 +38,7 @@ def get_user_expenses(user_id):
 
 
 # ============================================================
-# CATEGORY-WISE SPENDING
+# CURRENT MONTH CATEGORY SPENDING
 # ============================================================
 
 def get_category_spending(user_id):
@@ -52,12 +55,13 @@ def get_category_spending(user_id):
                 COALESCE(SUM(amount), 0) AS total
             FROM expenses
             WHERE user_id = %s
+              AND MONTH(expense_date) = MONTH(CURDATE())
+              AND YEAR(expense_date) = YEAR(CURDATE())
             GROUP BY category
             ORDER BY total DESC
         """
 
         cursor.execute(query, (user_id,))
-
         results = cursor.fetchall()
 
         return [
@@ -77,7 +81,7 @@ def get_category_spending(user_id):
 
 
 # ============================================================
-# MONTHLY SPENDING
+# MONTHLY SPENDING HISTORY
 # ============================================================
 
 def get_monthly_spending(user_id):
@@ -95,16 +99,11 @@ def get_monthly_spending(user_id):
                 COALESCE(SUM(amount), 0) AS total
             FROM expenses
             WHERE user_id = %s
-            GROUP BY
-                YEAR(expense_date),
-                MONTH(expense_date)
-            ORDER BY
-                year DESC,
-                month DESC
+            GROUP BY YEAR(expense_date), MONTH(expense_date)
+            ORDER BY year DESC, month DESC
         """
 
         cursor.execute(query, (user_id,))
-
         results = cursor.fetchall()
 
         return [
@@ -125,7 +124,7 @@ def get_monthly_spending(user_id):
 
 
 # ============================================================
-# TOP EXPENSES
+# TOP CURRENT-MONTH EXPENSES
 # ============================================================
 
 def get_top_expenses(user_id, limit=5):
@@ -146,12 +145,13 @@ def get_top_expenses(user_id, limit=5):
                 expense_date
             FROM expenses
             WHERE user_id = %s
+              AND MONTH(expense_date) = MONTH(CURDATE())
+              AND YEAR(expense_date) = YEAR(CURDATE())
             ORDER BY amount DESC
             LIMIT %s
         """
 
         cursor.execute(query, (user_id, limit))
-
         results = cursor.fetchall()
 
         return [
@@ -175,7 +175,7 @@ def get_top_expenses(user_id, limit=5):
 
 
 # ============================================================
-# BUDGET OVERSPENDING
+# CURRENT-MONTH OVERSPENDING
 # ============================================================
 
 def get_overspending_categories(user_id):
@@ -200,6 +200,8 @@ def get_overspending_categories(user_id):
                 AND YEAR(e.expense_date) = YEAR(CURDATE())
 
             WHERE b.user_id = %s
+              AND MONTH(b.budget_month) = MONTH(CURDATE())
+              AND YEAR(b.budget_month) = YEAR(CURDATE())
 
             GROUP BY
                 b.category,
@@ -212,7 +214,6 @@ def get_overspending_categories(user_id):
         """
 
         cursor.execute(query, (user_id,))
-
         results = cursor.fetchall()
 
         return [

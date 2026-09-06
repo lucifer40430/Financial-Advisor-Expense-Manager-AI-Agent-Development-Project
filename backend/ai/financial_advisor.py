@@ -1,3 +1,5 @@
+import os
+
 from backend.database.financial_analysis import (
     get_financial_summary
 )
@@ -23,10 +25,14 @@ from langchain_ollama import ChatOllama
 
 llm = ChatOllama(
     model="gemma4:cloud",
-    temperature=0
+    temperature=0,
+    base_url="https://ollama.com",
+    client_kwargs={
+        "headers": {
+            "Authorization": f"Bearer {os.getenv('OLLAMA_API_KEY')}"
+        }
+    }
 )
-
-
 # ============================================================
 # FINANCIAL ADVISOR
 # ============================================================

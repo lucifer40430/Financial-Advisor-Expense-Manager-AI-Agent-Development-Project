@@ -1,10 +1,13 @@
+import os
 import base64
 import mimetypes
 from pathlib import Path
 
+from dotenv import load_dotenv
 from langchain_core.messages import HumanMessage
 from langchain_ollama import ChatOllama
 
+load_dotenv()
 
 TRANSCRIBE_PROMPT = """
 Transcribe all visible text in this image exactly as written.
@@ -22,7 +25,13 @@ Rules:
 # Ollama Cloud model
 llm = ChatOllama(
     model="gemma4:cloud",
-    temperature=0
+    temperature=0,
+    base_url="https://ollama.com",
+    client_kwargs={
+        "headers": {
+            "Authorization": f"Bearer {os.getenv('OLLAMA_API_KEY')}"
+        }
+    }
 )
 
 

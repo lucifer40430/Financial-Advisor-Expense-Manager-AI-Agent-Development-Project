@@ -3,4 +3,5 @@ __pycache__/
 *.pyc
 .env
 .streamlit/secrets.toml
+ca.pem
 data/chroma_db/

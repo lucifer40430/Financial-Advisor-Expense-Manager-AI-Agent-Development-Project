@@ -32,8 +32,9 @@ USER_ID = 1
 # ============================================================
 # THEME STATE
 # ============================================================
+# Always start the application in dark mode
 if "theme" not in st.session_state:
-    st.session_state.theme = "light"
+    st.session_state.theme = "dark"
 
 CURRENT_THEME = st.session_state.theme
 
@@ -575,19 +576,44 @@ else:
     st.markdown(
         """
         <style>
+
+        /* =====================================================
+           LIGHT MODE — PREMIUM FINTECH PALETTE
+           ===================================================== */
+
         :root {
-            --fs-bg: #f7f8fc;
-            --fs-surface: #ffffff;
-            --fs-surface-2: #fbfcfe;
-            --fs-primary: #4f46e5;
-            --fs-primary-strong: #4338ca;
-            --fs-accent: #0f766e;
+            --fs-bg: #F7F8FC;
+            --fs-surface: #FFFFFF;
+            --fs-surface-soft: #FAFBFF;
+
+            --fs-primary: #4F46E5;
+            --fs-primary-hover: #4338CA;
+            --fs-primary-soft: #EEF2FF;
+
+            --fs-accent: #0F766E;
+            --fs-accent-soft: #ECFDF5;
+
             --fs-text: #111827;
-            --fs-muted: #64748b;
-            --fs-border: #e2e8f0;
-            --fs-hover: #f3f4f6;
-            --fs-shadow: 0 12px 35px rgba(15,23,42,.07);
+            --fs-text-secondary: #374151;
+            --fs-muted: #64748B;
+
+            --fs-border: #E5E7EB;
+            --fs-border-strong: #CBD5E1;
+
+            --fs-success: #15803D;
+            --fs-success-soft: #F0FDF4;
+
+            --fs-warning: #B45309;
+            --fs-warning-soft: #FFF7ED;
+
+            --fs-danger: #DC2626;
+            --fs-danger-soft: #FEF2F2;
         }
+
+
+        /* =====================================================
+           MAIN APP
+           ===================================================== */
 
         .stApp,
         [data-testid="stAppViewContainer"],
@@ -596,70 +622,435 @@ else:
             color: var(--fs-text) !important;
         }
 
-        .page-subtitle,
-        .hero p,
-        .feature-text,
-        .topbar-subtitle,
-        .footer-note,
-        .site-footer {
+        [data-testid="stMainBlockContainer"] {
+            color: var(--fs-text) !important;
+        }
+
+
+        /* =====================================================
+           ALL NORMAL TEXT
+           Fixes washed-out / invisible text
+           ===================================================== */
+
+        [data-testid="stMarkdownContainer"] p,
+        [data-testid="stMarkdownContainer"] li,
+        [data-testid="stMarkdownContainer"] span,
+        [data-testid="stText"],
+        .stText {
+            color: var(--fs-text-secondary) !important;
+        }
+
+        [data-testid="stMarkdownContainer"] strong,
+        [data-testid="stMarkdownContainer"] b {
+            color: var(--fs-text) !important;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            color: var(--fs-text) !important;
+        }
+
+        .page-title {
+            color: var(--fs-text) !important;
+        }
+
+        .page-subtitle {
             color: var(--fs-muted) !important;
         }
 
-        .feature-card,
-        .workflow-step,
-        .topbar,
-        .site-footer {
-            background: var(--fs-surface) !important;
-            box-shadow: var(--fs-shadow);
+        .section-title {
+            color: var(--fs-text) !important;
         }
 
-        .hero {
-            box-shadow: var(--fs-shadow);
+
+        /* =====================================================
+           TOP HEADER
+           ===================================================== */
+
+        .topbar {
+            background:
+                linear-gradient(
+                    135deg,
+                    #FFFFFF 0%,
+                    #F8FAFF 65%,
+                    #F3FBF9 100%
+                ) !important;
+
+            border: 1px solid var(--fs-border) !important;
+            box-shadow:
+                0 4px 18px rgba(15, 23, 42, 0.04) !important;
         }
+
+        .topbar-title {
+            color: var(--fs-text) !important;
+        }
+
+        .topbar-subtitle {
+            color: var(--fs-muted) !important;
+        }
+
+
+        /* =====================================================
+           HERO SECTION
+           ===================================================== */
+
+        .hero {
+            background:
+                radial-gradient(
+                    circle at 88% 12%,
+                    rgba(79, 70, 229, 0.10),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 8% 90%,
+                    rgba(15, 118, 110, 0.07),
+                    transparent 28%
+                ),
+                linear-gradient(
+                    135deg,
+                    #FFFFFF,
+                    #F8FAFF
+                ) !important;
+
+            border: 1px solid var(--fs-border) !important;
+            box-shadow:
+                0 10px 30px rgba(15, 23, 42, 0.05) !important;
+        }
+
+        .hero h1 {
+            color: var(--fs-text) !important;
+        }
+
+        .hero p {
+            color: var(--fs-muted) !important;
+        }
+
+        .hero-kicker {
+            background: var(--fs-primary-soft) !important;
+            color: #4338CA !important;
+            border: 1px solid #C7D2FE !important;
+        }
+
+
+        /* =====================================================
+           SMALL TRUST CHIPS
+           ===================================================== */
+
+        .trust-chip {
+            background: #FFFFFF !important;
+            color: var(--fs-text-secondary) !important;
+            border: 1px solid var(--fs-border) !important;
+        }
+
+
+        /* =====================================================
+           FEATURE CARDS
+           ===================================================== */
+
+        .feature-card {
+            background: var(--fs-surface) !important;
+            border: 1px solid var(--fs-border) !important;
+            box-shadow:
+                0 4px 16px rgba(15, 23, 42, 0.035) !important;
+        }
+
+        .feature-card:hover {
+            border-color: #C7D2FE !important;
+            box-shadow:
+                0 10px 25px rgba(79, 70, 229, 0.08) !important;
+        }
+
+        .feature-title {
+            color: var(--fs-text) !important;
+        }
+
+        .feature-text {
+            color: var(--fs-muted) !important;
+        }
+
+
+        /* =====================================================
+           WORKFLOW CARDS
+           ===================================================== */
+
+        .workflow-step {
+            background: #FFFFFF !important;
+            border: 1px solid var(--fs-border) !important;
+            color: var(--fs-text) !important;
+        }
+
+        .workflow-number {
+            background: var(--fs-primary-soft) !important;
+            color: var(--fs-primary) !important;
+        }
+
+
+        /* =====================================================
+           SIDEBAR
+           ===================================================== */
+
+        section[data-testid="stSidebar"] {
+            background: #FFFFFF !important;
+            border-right: 1px solid var(--fs-border) !important;
+        }
+
+        section[data-testid="stSidebar"] .block-container {
+            background: #FFFFFF !important;
+        }
+
+        section[data-testid="stSidebar"] .sidebar-title {
+            color: var(--fs-text) !important;
+        }
+
+        section[data-testid="stSidebar"] .sidebar-subtitle {
+            color: var(--fs-muted) !important;
+        }
+
+        section[data-testid="stSidebar"] .stCaption,
+        section[data-testid="stSidebar"] small {
+            color: var(--fs-muted) !important;
+        }
+
+
+        /* =====================================================
+           SIDEBAR NAVIGATION
+           ===================================================== */
+
+        section[data-testid="stSidebar"] .stButton > button {
+            background: transparent !important;
+            color: #475569 !important;
+            border: 1px solid transparent !important;
+            box-shadow: none !important;
+        }
+
+        section[data-testid="stSidebar"] .stButton > button:hover {
+            background: #F8FAFC !important;
+            border-color: #E2E8F0 !important;
+            color: #111827 !important;
+        }
+
+        section[data-testid="stSidebar"]
+        .stButton > button[kind="primary"] {
+            background: #EEF2FF !important;
+            color: #3730A3 !important;
+            border: 1px solid #E0E7FF !important;
+            box-shadow: inset 3px 0 0 #4F46E5 !important;
+        }
+
+
+        /* =====================================================
+           METRIC CARDS
+           ===================================================== */
+
+        [data-testid="stMetric"] {
+            background: #FFFFFF !important;
+            border: 1px solid var(--fs-border) !important;
+            border-radius: 14px !important;
+            color: var(--fs-text) !important;
+            box-shadow:
+                0 4px 16px rgba(15, 23, 42, 0.035) !important;
+        }
+
+        [data-testid="stMetricLabel"],
+        [data-testid="stMetricLabel"] * {
+            color: var(--fs-muted) !important;
+        }
+
+        [data-testid="stMetricValue"],
+        [data-testid="stMetricValue"] * {
+            color: var(--fs-text) !important;
+            font-weight: 800 !important;
+        }
+
+        [data-testid="stMetricDelta"],
+        [data-testid="stMetricDelta"] * {
+            color: var(--fs-text-secondary) !important;
+        }
+
+
+        /* =====================================================
+           INPUTS
+           ===================================================== */
 
         input,
         textarea,
         [data-baseweb="select"] > div,
         [data-baseweb="input"] > div {
-            background: #ffffff !important;
-            color: #111827 !important;
-            border-color: var(--fs-border) !important;
+            background: #FFFFFF !important;
+            color: var(--fs-text) !important;
+            border-color: var(--fs-border-strong) !important;
         }
 
-        .stButton > button {
-            transition: transform .15s ease, box-shadow .15s ease,
-                        background .15s ease, border-color .15s ease;
+        input::placeholder,
+        textarea::placeholder {
+            color: #94A3B8 !important;
         }
 
-        /* Primary CTA: clear hierarchy, high contrast */
+        input:focus,
+        textarea:focus {
+            border-color: var(--fs-primary) !important;
+            box-shadow:
+                0 0 0 3px rgba(79, 70, 229, 0.10) !important;
+        }
+
+
+        /* =====================================================
+           FILE UPLOADER
+           ===================================================== */
+
+        [data-testid="stFileUploader"] {
+            background: #FFFFFF !important;
+            border: 1px solid var(--fs-border) !important;
+            border-radius: 14px !important;
+        }
+
+        [data-testid="stFileUploader"] * {
+            color: var(--fs-text-secondary) !important;
+        }
+
+
+        /* =====================================================
+           PRIMARY BUTTON
+           ===================================================== */
+
         .stButton > button[kind="primary"] {
-            background: #4f46e5 !important;
-            color: #ffffff !important;
-            border-color: #4f46e5 !important;
-            box-shadow: 0 7px 20px rgba(79,70,229,.16) !important;
+            background: #4F46E5 !important;
+            color: #FFFFFF !important;
+            border: 1px solid #4F46E5 !important;
+
+            box-shadow:
+                0 7px 18px rgba(79, 70, 229, 0.15) !important;
         }
 
         .stButton > button[kind="primary"]:hover {
-            background: #4338ca !important;
-            border-color: #4338ca !important;
+            background: #4338CA !important;
+            border-color: #4338CA !important;
+            color: #FFFFFF !important;
             transform: translateY(-1px);
         }
 
-        /* Secondary buttons remain quieter */
+
+        /* =====================================================
+           SECONDARY BUTTON
+           ===================================================== */
+
         .stButton > button[kind="secondary"] {
-            background: transparent !important;
-            color: #374151 !important;
-            border-color: #e2e8f0 !important;
+            background: #FFFFFF !important;
+            color: var(--fs-text-secondary) !important;
+            border: 1px solid var(--fs-border-strong) !important;
         }
 
         .stButton > button[kind="secondary"]:hover {
-            background: #f8fafc !important;
-            border-color: #cbd5e1 !important;
+            background: #F8FAFC !important;
+            border-color: #94A3B8 !important;
+            color: var(--fs-text) !important;
         }
 
-        [data-testid="stChatMessage"] {
-            border-radius: 15px;
+
+        /* =====================================================
+           EXPANDERS
+           ===================================================== */
+
+        [data-testid="stExpander"] {
+            background: #FFFFFF !important;
+            border: 1px solid var(--fs-border) !important;
+            border-radius: 12px !important;
         }
+
+        [data-testid="stExpander"] summary {
+            color: var(--fs-text) !important;
+            font-weight: 700 !important;
+        }
+
+        [data-testid="stExpander"] p {
+            color: var(--fs-text-secondary) !important;
+        }
+
+
+        /* =====================================================
+           ALERTS
+           ===================================================== */
+
+        [data-testid="stAlert"] p,
+        [data-testid="stAlert"] div {
+            color: var(--fs-text-secondary) !important;
+        }
+
+
+        /* =====================================================
+           CHAT
+           ===================================================== */
+
+        [data-testid="stChatMessage"] {
+            background: #FFFFFF !important;
+            border: 1px solid var(--fs-border) !important;
+            border-radius: 14px !important;
+
+            box-shadow:
+                0 4px 14px rgba(15, 23, 42, 0.035) !important;
+        }
+
+        [data-testid="stChatMessage"] p {
+            color: var(--fs-text-secondary) !important;
+        }
+
+
+        /* =====================================================
+           PROGRESS BARS
+           ===================================================== */
+
+        [data-testid="stProgress"] > div {
+            background: #E2E8F0 !important;
+            border-radius: 999px !important;
+        }
+
+        [data-testid="stProgress"] [role="progressbar"] {
+            background: #4F46E5 !important;
+            border-radius: 999px !important;
+        }
+
+
+        /* =====================================================
+           CONTAINERS
+           ===================================================== */
+
+        [data-testid="stVerticalBlockBorderWrapper"] {
+            background: #FFFFFF !important;
+            border-color: var(--fs-border) !important;
+        }
+
+
+        /* =====================================================
+           FOOTER
+           ===================================================== */
+
+        .site-footer {
+            background: #FFFFFF !important;
+            border-top: 1px solid var(--fs-border) !important;
+            color: var(--fs-muted) !important;
+        }
+
+        .footer-brand {
+            color: var(--fs-text) !important;
+        }
+
+        .footer-note {
+            color: var(--fs-muted) !important;
+        }
+
+
+        /* =====================================================
+           DIVIDERS
+           ===================================================== */
+
+        hr {
+            border-color: var(--fs-border) !important;
+        }
+
         </style>
         """,
         unsafe_allow_html=True,

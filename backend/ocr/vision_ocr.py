@@ -3,11 +3,13 @@ import base64
 import mimetypes
 from pathlib import Path
 
+import streamlit as st
 from dotenv import load_dotenv
 from langchain_core.messages import HumanMessage
 from langchain_ollama import ChatOllama
 
 load_dotenv()
+
 
 TRANSCRIBE_PROMPT = """
 Transcribe all visible text in this image exactly as written.
@@ -22,18 +24,46 @@ Rules:
 """
 
 
-# Ollama Cloud model
+# --------------------------------------------------
+# Get Ollama API Key
+# --------------------------------------------------
+
+OLLAMA_API_KEY = os.getenv("ollama_api_key")
+
+# When deployed on Streamlit Cloud, read from Secrets
+if not OLLAMA_API_KEY:
+    try:
+        OLLAMA_API_KEY = st.secrets["ollama_api_key"]
+    except Exception:
+        OLLAMA_API_KEY = None
+
+
+if not OLLAMA_API_KEY:
+    raise RuntimeError(
+        "Ollama API key not configured. "
+        "Add ollama_api_key to .env or Streamlit Secrets."
+    )
+
+
+# --------------------------------------------------
+# Ollama Cloud
+# --------------------------------------------------
+
 llm = ChatOllama(
     model="gemma4:cloud",
     temperature=0,
     base_url="https://ollama.com",
     client_kwargs={
         "headers": {
-            "Authorization": f"Bearer {os.getenv('OLLAMA_API_KEY')}"
+            "Authorization": f"Bearer {OLLAMA_API_KEY}"
         }
-    }
+    },
 )
 
+
+# --------------------------------------------------
+# Vision OCR
+# --------------------------------------------------
 
 def vision_transcribe(image_path: Path) -> str:
     """
@@ -75,7 +105,7 @@ def vision_transcribe(image_path: Path) -> str:
         ]
     )
 
-    # Send image + prompt to Ollama Cloud
+    # Send image to Ollama Cloud
     response = llm.invoke([message])
 
     return response.content.strip()
